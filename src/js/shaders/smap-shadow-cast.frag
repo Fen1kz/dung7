@@ -2,8 +2,9 @@ precision highp float;
 
 uniform sampler2D uSampler;
 varying vec2 vTextureCoord;
-uniform vec2 resolution;
+
 uniform vec2 gameResolution;
+uniform vec2 rtResolution;
 uniform vec2 shaderResolution;
 
 uniform sampler2D iChannel0;
@@ -32,14 +33,29 @@ void main() {
     float angleToPoint = atan(toLight.y, toLight.x);
 
     angleToPoint = angleToPoint / (2.0 * PI);
+//    angleToPoint = angleToPoint * .5;// * (gameResolution.x / rtResolution.x);
+    color.g = angleToPoint;
 
     vec2 samplePoint = vec2(angleToPoint, 0);
-    vec4 LMapColor = texture2D(iChannel0, samplePoint);
+    vec4 LMapColor = texture2D(uSampler, samplePoint);
 
     color.a = 0.0;
-    if (length(toLight) > LMapColor.r) {
+    if (length(toLight) > LMapColor.a) {
         color.a = 0.8;
     }
 
+
+//    color.a = LMapColor.a;
+
+
+//    color.a = 1.0 - length(toLight);
+
+
+//    color.a = 1.0 - length(toLight) - LMapColor.a;
+
+
+//    color.rg = vTextureCoord;
+//    color.a = 1.0;
+//    color = texture2D(uSampler, vTextureCoord);
     gl_FragColor = color;
 }

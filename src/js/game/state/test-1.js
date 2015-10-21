@@ -12,7 +12,7 @@ class Test1 extends State {
     create() {
         this.mansion = PIXI.Sprite.fromImage('assets/gfx/texture1.png');
 
-        this.SHADER_SIZE = 256;
+        this.SHADER_SIZE = 512;
 
         this.shadowTexureShader = new BaseFilter(this.game,
             require('shaders/shadow.frag'), {
@@ -51,25 +51,31 @@ class Test1 extends State {
         //this.stage.addChild(this.renderGroup);
 
         this.sourceRT = new PIXI.RenderTexture(this.game.renderer, this.game.width, this.game.height);
-        this.sourceRT.render(this.renderGroup, null, true);
         this.sourceSprite = new PIXI.Sprite(this.sourceRT);
         this.stage.addChild(this.sourceSprite);
 
         this.shadowMapRT = new PIXI.RenderTexture(this.game.renderer, this.SHADER_SIZE, this.SHADER_SIZE);
         this.shadowMapSprite = new PIXI.Sprite(this.shadowMapRT);
-        this.stage.addChild(this.shadowMapSprite);
+        //this.stage.addChild(this.shadowMapSprite);
         this.shadowMapSprite.filters = [this.shadowTexureShader];
+
+        this.shaderedRT = new PIXI.RenderTexture(this.game.renderer, this.SHADER_SIZE, this.SHADER_SIZE);
+        this.shaderedSprite = new PIXI.Sprite(this.shaderedRT);
+        this.shaderedSprite.x = 50;
+        this.shaderedSprite.y = 50;
+        //this.stage.addChild(this.shaderedSprite);
+        //this.shadowMapSprite.filters = [this.shadowTexureShader];
 
         this.lightMapRT = new PIXI.RenderTexture(this.game.renderer, this.game.width, this.game.height);
         //this.lightMapRT.render(this.renderGroup, null, true);
         this.lightMapSprite = new PIXI.Sprite(this.lightMapRT);
         this.stage.addChild(this.lightMapSprite);
-        //this.lightMapSprite.filters = [this.shadowCastShader, this.shadowMapSprite, this.shadowMapSprite, true);
+        this.lightMapSprite.filters = [this.shadowCastShader];
         //this.lightMapSprite.filters = [this.shadowCastShader, this.shadowMapSprite, this.shadowMapSprite, true);
 
         //console.log(this.game.renderer.plugins.interaction.mouse.global.x, this.game.renderer.plugins.interaction.mouse.global.y);
         this.shadowTexureShader.uniforms.iChannel0.value = this.sourceRT;
-        this.shadowCastShader.uniforms.iChannel0.value = this.shadowMapRT;
+        this.shadowCastShader.uniforms.iChannel0.value = this.shaderedRT;
         window.state = this;
 
         //let rtarget = new PIXI.RenderTarget(this.game.renderer.gl, 500, 500);
@@ -82,9 +88,15 @@ class Test1 extends State {
     }
 
     update() {
+        this.sourceRT.render(this.renderGroup, null, true);
+        this.shaderedRT.render(this.shadowMapSprite, null, true);
+
+
         let pointer = this.game.renderer.plugins.interaction.mouse.global;
         this.shadowTexureShader.uniforms.uLightPosition.value[0] = pointer.x;
         this.shadowTexureShader.uniforms.uLightPosition.value[1] = pointer.y;
+        this.shadowCastShader.uniforms.uLightPosition.value[0] = pointer.x;
+        this.shadowCastShader.uniforms.uLightPosition.value[1] = pointer.y;
         //console.log(this.game.renderer.plugins.interaction.mouse.global.x, this.game.renderer.plugins.interaction.mouse.global.y);
     }
 }
