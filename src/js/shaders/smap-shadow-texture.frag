@@ -36,6 +36,8 @@ void main(void) {
         }
     }
     gl_FragColor = vec4(vec3(0.0, 0.0, 0.0), dst);
+//
+//    gl_FragColor = vec4(fract(length(vTextureCoord) * 3.));
 
 //    color.rg = localLightPosition + coord;;
 //    color.a = 1.0;

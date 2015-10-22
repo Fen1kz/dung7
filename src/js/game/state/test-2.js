@@ -13,7 +13,7 @@ class Test1 extends State {
     create() {
         this.mansion = PIXI.Sprite.fromImage('assets/gfx/texture1.png');
 
-        this.SHADER_SIZE = 512;
+        this.SHADER_SIZE = 64;
 
         this.SMapFilter = new SMapFilter(this.game, {
             uLightColor: {type: '4fv', value: [1, 1, 1, 1.0]}
