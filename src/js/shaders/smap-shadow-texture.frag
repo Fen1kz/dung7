@@ -5,8 +5,9 @@ uniform sampler2D uSampler;
 
 uniform vec2 gameResolution;
 uniform vec2 shaderResolution;
+uniform vec2 rtResolution;
 
-uniform vec2 uLightPosition;
+uniform vec2 uLightPosition[2];
 uniform vec4 uLightColor;
 
 uniform sampler2D iChannel0;
@@ -18,7 +19,15 @@ const float THRESHOLD = 0.01;
 void main(void) {
     vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
 
-    vec2 localLightPosition = uLightPosition / gameResolution;
+    float yCoord = vTextureCoord.y * (shaderResolution.y / rtResolution.y);
+    int lightnum = int(floor(yCoord * 2.0));
+    vec2 lightPosition;
+    if (lightnum == 0) {
+        lightPosition = uLightPosition[0];
+    } else {
+        lightPosition = uLightPosition[1];
+    }
+    vec2 localLightPosition = lightPosition / gameResolution;
     float dst = 1.0;
     for (float y = 0.0; y < SIZE; y += 1.0) {
         float distance = y / SIZE;
@@ -35,6 +44,9 @@ void main(void) {
         }
     }
     color = vec4(vec3(0.0), dst);
+//    color = vec4(vec3(0.0), 1.0);
+//    color.r = yCoord;
+//    color.r = float(lightnum);
     gl_FragColor = color;
 //    gl_FragColor = vec4(vec3(dst * .25, dst / 4., dst / 4.), dst / 4.);
 

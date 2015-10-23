@@ -17,10 +17,11 @@ class Test1 extends State {
 
         this.SMapFilter = new SMapFilter(this.game, {
             uLightColor: {type: '4fv', value: [1, 1, 1, 1.0]}
-            , uLightPosition: {type: '2fv', value: [0.5, 0.5]}
+            , 'uLightPosition[0]': {type: '2fv', value: [0.5, 0.5]}
+            , 'uLightPosition[1]': {type: '2fv', value: [0.5, 0.5]}
             , gameResolution: {type: '2fv', value: [this.game.width, this.game.height]}
             , shaderResolution: {type: '2fv', value: [this.SHADER_SIZE, this.SHADER_SIZE]}
-            , rtResolution: {type: '2fv', value: [this.SHADER_SIZE, 2]}
+            , rtResolution: {type: '2fv', value: [this.SHADER_SIZE, 64]}
         });
 
         this.renderGroup = new PIXI.Container();
@@ -58,7 +59,7 @@ class Test1 extends State {
 
         this.l4 = new PIXI.Graphics();
         this.l4.beginFill(0xFFFF00);
-        this.l4.drawCircle(80, 120, 10);
+        this.l4.drawCircle(0, 0, 10);
         this.l4.endFill();
         this.stage.addChild(this.l4);
     }
@@ -68,13 +69,15 @@ class Test1 extends State {
         let time = (now - this.timer);
         this.c4.x = 200 + 100 * Math.cos(time * 0.1 * Math.PI / 180);
         this.c4.y = 200 + 100 * Math.sin(time * 0.1 * Math.PI / 180);
-        this.l4.x = 120 + 80 * Math.cos(-time * 0.1 * Math.PI / 180);
-        this.l4.y = 120 + 80 * Math.sin(-time * 0.1 * Math.PI / 180);
+        this.l4.x = 200 + 80 * Math.cos(-time * 0.1 * Math.PI / 180);
+        this.l4.y = 200 + 80 * Math.sin(-time * 0.1 * Math.PI / 180);
+        this.lightMapRT.render(this.renderGroup, null, true);
 
         let pointer = this.game.renderer.plugins.interaction.mouse.global;
-        this.SMapFilter.uniforms.uLightPosition.value[0] = pointer.x;
-        this.SMapFilter.uniforms.uLightPosition.value[1] = pointer.y;
-        this.lightMapRT.render(this.renderGroup, null, true);
+        this.SMapFilter.uniforms['uLightPosition[0]'].value[0] = pointer.x;
+        this.SMapFilter.uniforms['uLightPosition[0]'].value[1] = pointer.y;
+        this.SMapFilter.uniforms['uLightPosition[1]'].value[0] = this.l4.x;
+        this.SMapFilter.uniforms['uLightPosition[1]'].value[1] = this.l4.y;
 
         this.SMapFilter.update();
         //console.log(this.game.renderer.plugins.interaction.mouse.global.x, this.game.renderer.plugins.interaction.mouse.global.y);

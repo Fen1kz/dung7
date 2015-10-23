@@ -14,7 +14,7 @@ class SMapFilter extends PIXI.AbstractFilter {
             , this.uniforms.rtResolution.value[0]
             , this.uniforms.rtResolution.value[1]
             , PIXI.SCALE_MODES.LINEAR
-            , this.game.renderer.resolution * 2);
+            , 4);
 
         this.renderTarget.transform = new PIXI.Matrix()
             .scale(
@@ -27,7 +27,8 @@ class SMapFilter extends PIXI.AbstractFilter {
             null
             , fragShadowTexture
             , {
-                uLightPosition: _.clone(this.uniforms.uLightPosition)
+                'uLightPosition[0]': _.clone(this.uniforms['uLightPosition[0]'])
+                , 'uLightPosition[1]': _.clone(this.uniforms['uLightPosition[1]'])
                 , gameResolution: _.clone(this.uniforms.gameResolution)
                 , shaderResolution: _.clone(this.uniforms.shaderResolution)
                 , rtResolution: _.clone(this.uniforms.rtResolution)
@@ -41,7 +42,8 @@ class SMapFilter extends PIXI.AbstractFilter {
             null
             , fragShadowCast
             , {
-                uLightPosition:     (this.uniforms.uLightPosition)
+                'uLightPosition[0]': _.clone(this.uniforms['uLightPosition[0]'])
+                , 'uLightPosition[1]': _.clone(this.uniforms['uLightPosition[1]'])
                 , gameResolution:   (this.uniforms.gameResolution)
                 , shaderResolution: (this.uniforms.shaderResolution)
                 , rtResolution:     (this.uniforms.rtResolution)
@@ -70,11 +72,9 @@ class SMapFilter extends PIXI.AbstractFilter {
     applyFilter(renderer, input, output) {
         this.filterShadowTexture.applyFilter(renderer, input, this.renderTarget, true);
 
-        //this.filterShadowCast.applyFilter(renderer, this.renderTarget, output);
         this.filterShadowCast.applyFilter(renderer, input, output);
-
-        //this.defaultFilter.applyFilter(renderer, input, output, true);
         //this.defaultFilter.applyFilter(renderer, this.renderTarget, output);
+        //this.defaultFilter.applyFilter(renderer, input, output, true);
     }
 }
 
