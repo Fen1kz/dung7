@@ -4,6 +4,8 @@ let State = require('engine/State');
 let BaseFilter = require('engine/BaseFilter');
 let SMapFilter = require('engine/SMapFilter');
 
+let Circle = require('game/entities/circle');
+
 class Test1 extends State {
     preload(loader) {
         loader.add('assets/gfx/texture1.png');
@@ -25,20 +27,14 @@ class Test1 extends State {
         });
 
         this.renderGroup = new PIXI.Container();
-        this.c1 = new PIXI.Graphics();
-        this.c1.beginFill(0xFF0000);
-        this.c1.drawCircle(80, 40, 10);
-        this.c1.endFill();
+
+        this.c1 = new Circle(80, 40, 10, 0xFF0000);
         this.renderGroup.addChild(this.c1);
-        this.c2 = new PIXI.Graphics();
-        this.c2.beginFill(0x00FF00);
-        this.c2.drawCircle(40, 80, 10);
-        this.c2.endFill();
+
+        this.c2 = new Circle(40, 80, 10, 0x00FF00);
         this.renderGroup.addChild(this.c2);
-        this.c3 = new PIXI.Graphics();
-        this.c3.beginFill(0x0000FF);
-        this.c3.drawCircle(80, 120, 10);
-        this.c3.endFill();
+
+        this.c3 = new Circle(80, 120, 10, 0x0000FF);
         this.renderGroup.addChild(this.c3);
 
         this.c4 = new PIXI.Graphics();

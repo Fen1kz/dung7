@@ -19,7 +19,10 @@ export default function (gulp, $, config) {
             if (err) return console.log(err);
         });
         //gulp.watch(`${dirs.src}/**/*.js`, ['build', 'reload']);
-        $.watch(globs.src, {verbose: true}, () => {
+        $.watch(globs.src, {
+            readDelay: 200
+            , verbose: true
+        }, () => {
             //$.sequence('build')();
             $.sequence('build', 'reload')();
         });
