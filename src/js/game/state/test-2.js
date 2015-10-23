@@ -13,13 +13,14 @@ class Test1 extends State {
     create() {
         this.mansion = PIXI.Sprite.fromImage('assets/gfx/texture1.png');
 
-        this.SHADER_SIZE = 64;
+        this.SHADER_SIZE = 256;
 
         this.SMapFilter = new SMapFilter(this.game, {
             uLightColor: {type: '4fv', value: [1, 1, 1, 1.0]}
             , uLightPosition: {type: '2fv', value: [0.5, 0.5]}
             , gameResolution: {type: '2fv', value: [this.game.width, this.game.height]}
             , shaderResolution: {type: '2fv', value: [this.SHADER_SIZE, this.SHADER_SIZE]}
+            , rtResolution: {type: '2fv', value: [this.SHADER_SIZE, 2]}
         });
 
         this.renderGroup = new PIXI.Container();
@@ -38,6 +39,13 @@ class Test1 extends State {
         this.c3.drawCircle(80, 120, 10);
         this.c3.endFill();
         this.renderGroup.addChild(this.c3);
+
+        this.c4 = new PIXI.Graphics();
+        this.c4.beginFill(0x00FFFF);
+        this.c4.drawCircle(80, 120, 10);
+        this.c4.endFill();
+        this.renderGroup.addChild(this.c4);
+
         this.stage.addChild(this.renderGroup);
 
         this.lightMapRT = new PIXI.RenderTexture(this.game.renderer, this.game.width, this.game.height);
@@ -46,9 +54,23 @@ class Test1 extends State {
         this.lightMapSprite.filters = [this.SMapFilter];
 
         window.state = this;
+        this.timer = new Date();
+
+        this.l4 = new PIXI.Graphics();
+        this.l4.beginFill(0xFFFF00);
+        this.l4.drawCircle(80, 120, 10);
+        this.l4.endFill();
+        this.stage.addChild(this.l4);
     }
 
     update() {
+        let now = new Date();
+        let time = (now - this.timer);
+        this.c4.x = 200 + 100 * Math.cos(time * 0.1 * Math.PI / 180);
+        this.c4.y = 200 + 100 * Math.sin(time * 0.1 * Math.PI / 180);
+        this.l4.x = 120 + 80 * Math.cos(-time * 0.1 * Math.PI / 180);
+        this.l4.y = 120 + 80 * Math.sin(-time * 0.1 * Math.PI / 180);
+
         let pointer = this.game.renderer.plugins.interaction.mouse.global;
         this.SMapFilter.uniforms.uLightPosition.value[0] = pointer.x;
         this.SMapFilter.uniforms.uLightPosition.value[1] = pointer.y;

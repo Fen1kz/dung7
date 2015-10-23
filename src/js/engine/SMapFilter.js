@@ -9,7 +9,19 @@ class SMapFilter extends PIXI.AbstractFilter {
         super(null, null, uniforms);
         this.game = game;
 
-        let rtSize = 256;
+        this.renderTarget = new PIXI.RenderTarget(
+            this.game.renderer.gl
+            , this.uniforms.rtResolution.value[0]
+            , this.uniforms.rtResolution.value[1]
+            , PIXI.SCALE_MODES.LINEAR
+            , this.game.renderer.resolution * 2);
+
+        this.renderTarget.transform = new PIXI.Matrix()
+            .scale(
+                this.uniforms.shaderResolution.value[0] / this.game.width
+                , this.uniforms.shaderResolution.value[1] / this.game.height);
+
+        this.defaultFilter = new PIXI.AbstractFilter(null, require('shaders/smap-test.frag'));
 
         this.filterShadowTexture = new PIXI.AbstractFilter(
             null
@@ -17,47 +29,52 @@ class SMapFilter extends PIXI.AbstractFilter {
             , {
                 uLightPosition: _.clone(this.uniforms.uLightPosition)
                 , gameResolution: _.clone(this.uniforms.gameResolution)
-                , rtResolution: {type: '2fv', value: [rtSize, rtSize]}
+                , shaderResolution: _.clone(this.uniforms.shaderResolution)
+                , rtResolution: _.clone(this.uniforms.rtResolution)
             }
-        )
+        );
+
+        //let rt = new PIXI.RenderTexture();
+        //debugger;
 
         this.filterShadowCast = new PIXI.AbstractFilter(
             null
             , fragShadowCast
             , {
-                uLightPosition: _.clone(this.uniforms.uLightPosition)
-                , gameResolution: _.clone(this.uniforms.gameResolution)
-                , rtResolution: {type: '2fv', value: [rtSize, rtSize]}
-            }
+                uLightPosition:     (this.uniforms.uLightPosition)
+                , gameResolution:   (this.uniforms.gameResolution)
+                , shaderResolution: (this.uniforms.shaderResolution)
+                , rtResolution:     (this.uniforms.rtResolution)
+                , shadowMapChannel: {type: 'sampler2D',
+                    value: {
+                        baseTexture: {
+                            hasLoaded: true
+                            , _glTextures: [this.renderTarget.texture]
+                        }
+                    }
+                }
+            }//: this.renderTarget.texture
         );
-
-        this.renderTarget = new PIXI.RenderTarget(
-            this.game.renderer.gl
-            , rtSize
-            , rtSize
-            , PIXI.SCALE_MODES.LINEAR
-            , this.game.renderer.resolution);
-
-        this.defaultFilter = new PIXI.AbstractFilter(null, require('shaders/smap-test.frag'));
-        //debugger;
-        //console.log(this.renderTarget.projectionMatrix);
-        //0.03125
-        let mx = new PIXI.Matrix().scale(rtSize / 512, rtSize / 512);
-        this.renderTarget.transform = mx;
-        //this.renderTarget.projectionMatrix.d = 0.00390625;
-        //console.log(this.renderTarget.projectionMatrix);
-        //console.log(x);
-        //this.renderTarget.frame = new PIXI.Rectangle(0, 0, 512, 512);
     }
+
+
+//    uLightPosition: _.clone(this.uniforms.uLightPosition)
+//, gameResolution: _.clone(this.uniforms.gameResolution)
+//, shaderResolution: _.clone(this.uniforms.shaderResolution)
+//, rtResolution: _.clone(this.uniforms.rtResolution)
 
     update() {
 
     }
 
     applyFilter(renderer, input, output) {
-        let renderTarget = this.renderTarget;
-        this.filterShadowTexture.applyFilter(renderer, input, renderTarget, true);
-        this.filterShadowCast.applyFilter(renderer, renderTarget, output);
+        this.filterShadowTexture.applyFilter(renderer, input, this.renderTarget, true);
+
+        //this.filterShadowCast.applyFilter(renderer, this.renderTarget, output);
+        this.filterShadowCast.applyFilter(renderer, input, output);
+
+        //this.defaultFilter.applyFilter(renderer, input, output, true);
+        //this.defaultFilter.applyFilter(renderer, this.renderTarget, output);
     }
 }
 

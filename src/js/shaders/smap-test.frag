@@ -17,7 +17,7 @@ const float SIZE = 512.0;
 const float THRESHOLD = 0.1;
 
 void main(void) {
-    vec2 position = vTextureCoord * 2.;
+    vec2 position = vTextureCoord;// * 2.;
     vec4 color = texture2D(uSampler, position);
     gl_FragColor = color;
 }
