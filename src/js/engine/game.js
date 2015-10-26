@@ -8,11 +8,18 @@ class D7Game {
         //this.renderer = new PIXI.CanvasRenderer(400, 300, {backgroundColor: 0x1099bb});
         this.state = new (require('engine/StateManager'))(this);
 
-
-
-        //this.loaders = {
-        //    Loader: new PIXI.loaders.Loader()
-        //}
+        this.$events = {}
+        this.events = {
+            on: (name, callback) => {
+                if (!this.$events[name]) this.$events[name] = [];
+                this.$events[name].push(callback);
+            }
+            , trigger: (name, ...args) => {
+                return (this.$events[name]
+                    ? this.$events[name].map(callback => callback.apply(null, ...args))
+                    : console.warn(`Game has no event [${name}]`));
+            }
+        }
     }
 
     load(name, url) {

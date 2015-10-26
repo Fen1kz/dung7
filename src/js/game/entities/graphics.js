@@ -1,14 +1,16 @@
 let PIXI = require('pixi.js');
 
-class Sprite extends PIXI.Sprite {
+class Graphics extends PIXI.Graphics {
     constructor(game, x, y) {
         super();
         this.game = game;
         this.x = x;
         this.y = y;
-        //this.init();
-        console.log('Sprite');
+    }
+
+    destroy() {
+        if (this.parent) this.parent.removeChild(this);
     }
 }
 
-export default Sprite;
+export default Graphics;

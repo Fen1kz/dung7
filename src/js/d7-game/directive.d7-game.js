@@ -25,6 +25,11 @@ function link(scope, element, attr, ctrl) {
     let GameService = ctrl.GameService;
     let game = GameService.init(scope, element);
 
+    scope.event = (name, ...args) => {
+        game.events.trigger(name, ...args);
+    };
+
+
     //let Lights3 = require('./states/state.lights-3.js');
     //
     //game.events = {};

@@ -8,7 +8,7 @@ export default function (gulp, $, config) {
     let globs = config.globs;
 
     let bundler = browserify(`${dirs.src}/js/app.js`, {
-        paths: ['./node_modules','./src/js/']
+        paths: ['./node_modules', './src/js/']
         , debug: true
     })
         .transform(stringify(['.html', '.glsl', '.frag']))
