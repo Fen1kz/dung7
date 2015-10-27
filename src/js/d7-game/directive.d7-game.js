@@ -26,40 +26,8 @@ function link(scope, element, attr, ctrl) {
     let game = GameService.init(scope, element);
 
     scope.event = (name, ...args) => {
-        game.events.trigger(name, ...args);
+        game.trigger(name, ...args);
     };
 
-
-    //let Lights3 = require('./states/state.lights-3.js');
-    //
-    //game.events = {};
-    //['slider.change', 'sun', 'shadow'
-    //    , 'light.add', 'light.remove', 'light.rays'
-    //    , 'box.add', 'box.remove']
-    //    .forEach((s) => game.events[s] = new Phaser.Signal());
-    //
-    //ctrl.sun = () => GameService.event('sun');
-    //ctrl.shadow = () => GameService.event('shadow');
-    //
-    //scope.$watch(() => ctrl.slider, () => {
-    //    GameService.event('slider.change', ctrl.slider);
-    //});
-    //
-    //ctrl.light = {
-    //    add: () => GameService.event('light.add')
-    //    , remove: () => GameService.event('light.remove')
-    //    , rays: () => GameService.event('light.rays')
-    //};
-    //ctrl.box = {
-    //    add: () => GameService.event('box.add')
-    //    , remove: () => GameService.event('box.remove')
-    //};
-    //
-    //GameService.init(scope, game);
-    //
-    //game.state.add('Lights3', Lights3);
-    //
-    //game.state.start('Lights3');
-    //
-    //console.log(game);
+    game.on('object.selected')
 }

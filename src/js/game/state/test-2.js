@@ -24,26 +24,26 @@ class Test1 extends State {
         });
 
         let spheres = [];
-        this.game.events.on('sphere.add', () => {
+        this.game.on('sphere.add', () => {
             let sphere = new Circle(this.game, this.game.width / 2, this.game.height / 2, 10, Math.random() * 0xFFFFFF);
             spheres.push(sphere);
             this.renderGroup.addChild(sphere);
         });
-        this.game.events.on('sphere.remove', () => {
+        this.game.on('sphere.remove', () => {
             let sphere = spheres.pop();
             if (sphere) {
                 sphere.destroy();
             }
         });
         this.lights = [];
-        this.game.events.on('light.add', () => {
+        this.game.on('light.add', () => {
             let light = new Circle(this.game, this.game.width / 2, this.game.height / 2, 10, 0xFFFF00);
             console.log(`uLightColor[${this.lights.length}]`);
             this.lights.push(light);
             this.SMapFilter.uniforms[`uLightColor[${this.lights.length}]`].value[3] = 1;
             this.stage.addChild(light);
         });
-        this.game.events.on('light.remove', () => {
+        this.game.on('light.remove', () => {
             this.SMapFilter.uniforms[`uLightColor[${this.lights.length}]`].value[3] = 0.0;
             let light = this.lights.pop();
             if (light) {
@@ -70,7 +70,7 @@ class Test1 extends State {
 
         this.c4 = new Circle(this.game, 80, 120, 10, 0x00FFFF);
         spheres.push(this.c4);
-        this.c4.destroyDraggable();
+        //this.c4.destroyDraggable();
         this.renderGroup.addChild(this.c4);
 
 
@@ -85,7 +85,7 @@ class Test1 extends State {
         this.timer = new Date();
 
         this.l4 = new Circle(this.game, 0, 0, 10, 0xFFFF00);
-        this.l4.destroyDraggable();
+        //this.l4.D();
         this.l4.update = () => {
             let now = new Date();
             let time = (now - this.timer);

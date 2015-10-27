@@ -1,4 +1,5 @@
 let PIXI = require('pixi.js');
+let Events = require('engine/core/events');
 
 class D7Game {
     constructor() {
@@ -8,18 +9,7 @@ class D7Game {
         //this.renderer = new PIXI.CanvasRenderer(400, 300, {backgroundColor: 0x1099bb});
         this.state = new (require('engine/StateManager'))(this);
 
-        this.$events = {}
-        this.events = {
-            on: (name, callback) => {
-                if (!this.$events[name]) this.$events[name] = [];
-                this.$events[name].push(callback);
-            }
-            , trigger: (name, ...args) => {
-                return (this.$events[name]
-                    ? this.$events[name].map(callback => callback.apply(null, ...args))
-                    : console.warn(`Game has no event [${name}]`));
-            }
-        }
+        Events.mix(this);
     }
 
     load(name, url) {
