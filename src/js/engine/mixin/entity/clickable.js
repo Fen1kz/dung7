@@ -1,4 +1,4 @@
-let Mixin = require('engine/core/mixin');
+let Mixin = require('engine/mixin/mixin');
 
 class Clickable extends Mixin {
     constructor(target) {

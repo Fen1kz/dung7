@@ -7,7 +7,9 @@ app.config(['$stateProvider', ($stateProvider) => {
         url: '/home'
         , views: {
             'main@': {
-                template: '<d7-game></d7-game>'
+                template: `
+<d7-game></d7-game>
+`
                 //template: '<div>asdfsdf</div>'
             }
         }

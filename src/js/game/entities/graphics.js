@@ -1,6 +1,6 @@
 let PIXI = require('pixi.js');
-let Events = require('engine/core/events');
-let ObjectInput = require('engine/core/object.input');
+let Events = require('engine/mixin/events');
+let Input = require('engine/mixin/entity/input');
 
 
 class Graphics extends PIXI.Graphics {
@@ -10,7 +10,7 @@ class Graphics extends PIXI.Graphics {
         this.x = x;
         this.y = y;
         Events.mix(this);
-        ObjectInput.mix(this);
+        Input.mix(this);
     }
 
     destroy() {

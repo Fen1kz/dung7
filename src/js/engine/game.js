@@ -1,5 +1,5 @@
 let PIXI = require('pixi.js');
-let Events = require('engine/core/events');
+let Events = require('engine/mixin/events');
 
 class D7Game {
     constructor() {

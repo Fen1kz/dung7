@@ -1,10 +1,12 @@
 let PIXI = require('pixi.js');
 let State = require('engine/State');
+let Selectable = require('engine/mixin/entity/selectable');
 
 let BaseFilter = require('engine/BaseFilter');
 let SMapFilter = require('engine/SMapFilter');
 
 let Circle = require('game/entities/circle');
+
 
 class Test1 extends State {
     preload(loader) {
@@ -38,10 +40,12 @@ class Test1 extends State {
         this.lights = [];
         this.game.on('light.add', () => {
             let light = new Circle(this.game, this.game.width / 2, this.game.height / 2, 10, 0xFFFF00);
-            console.log(`uLightColor[${this.lights.length}]`);
             this.lights.push(light);
-            this.SMapFilter.uniforms[`uLightColor[${this.lights.length}]`].value[3] = 1;
             this.stage.addChild(light);
+            Selectable.mix(light, {
+                type: 'light'
+            });
+            this.SMapFilter.uniforms[`uLightColor[${this.lights.length}]`].value[3] = 1;
         });
         this.game.on('light.remove', () => {
             this.SMapFilter.uniforms[`uLightColor[${this.lights.length}]`].value[3] = 0.0;

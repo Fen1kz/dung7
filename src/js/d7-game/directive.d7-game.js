@@ -29,5 +29,9 @@ function link(scope, element, attr, ctrl) {
         game.trigger(name, ...args);
     };
 
-    game.on('object.selected')
+    scope.selection = {};
+    game.on('object.selected', (event, type, object) => {
+        scope.selection.type = type;
+        scope.selection.object = object;
+    });
 }

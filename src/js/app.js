@@ -15,6 +15,7 @@ const app = angular.module(APP_NAME, [
 
 app.service('GameService', require('./d7-game/service.d7-game'));
 app.directive('d7Game', require('./d7-game/directive.d7-game'));
+app.directive('d7Selection.light', require('./d7-game/selection/d7-selection.light'));
 
 app.config(['$urlRouterProvider', '$stateProvider', ($urlRouterProvider, $stateProvider) => {
     $stateProvider.state('app', {
