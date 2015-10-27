@@ -10,10 +10,10 @@ uniform vec2 rtResolution;
 uniform vec3 uLightPosition[LIGHTS_COUNT];
 uniform vec4 uLightColor[LIGHTS_COUNT];
 
-uniform sampler2D iChannel0;
+uniform sampler2D uLightMap;
 
 const float PI = 3.141592653589793238462643383279502884197169399375105820974944592307816406286;
-const float SIZE = 128.0;
+const float SIZE = 32.0;
 const float THRESHOLD = 0.01;
 
 void main(void) {
@@ -37,7 +37,7 @@ void main(void) {
         vec2 coord = vec2(cos(angle) * distance, sin(angle) * distance);
         coord = localLightPosition + coord / (gameResolution / shaderResolution);
         coord = clamp(coord, .0, 1.0);
-        vec4 data = texture2D(uSampler, coord);
+        vec4 data = texture2D(uLightMap, coord);
 //      color = data;
         if (data.a > THRESHOLD) {
             dst = min(dst, distance);

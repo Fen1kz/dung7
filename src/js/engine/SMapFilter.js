@@ -8,6 +8,7 @@ class SMapFilter extends PIXI.AbstractFilter {
     constructor(game, uniforms, definitions) {
         super(null, null, uniforms);
         this.game = game;
+        this.lightMapRT = new PIXI.RenderTexture(this.game.renderer, this.game.width, this.game.height);
 
         this.definitions = definitions;
 
@@ -20,8 +21,8 @@ class SMapFilter extends PIXI.AbstractFilter {
 
         this.renderTarget.transform = new PIXI.Matrix()
             .scale(
-                this.uniforms.shaderResolution.value[0] / this.game.width
-                , this.uniforms.shaderResolution.value[1] / this.game.height);
+            this.uniforms.shaderResolution.value[0] / this.game.width
+            , this.uniforms.shaderResolution.value[1] / this.game.height);
 
         this.defaultFilter = new PIXI.AbstractFilter(null, require('shaders/smap-test.frag'));
 
@@ -30,6 +31,16 @@ class SMapFilter extends PIXI.AbstractFilter {
         //    , shaderResolution: _.clone(uniforms.shaderResolution)
         //    , rtResolution: _.clone(uniforms.rtResolution)
         //};
+        this.uniforms.uLightMap = {
+            type: 'sampler2D',
+            value: this.lightMapRT
+            //{
+            //    baseTexture: {
+            //        hasLoaded: true
+            //        , _glTextures: [this.renderTarget.texture]
+            //    }
+            //}
+        };
         _.range(this.definitions.LIGHTS_COUNT).forEach(i => {
             this.uniforms[`uLightPosition[${i}]`] = {type: '3fv', value: [0, 0, 0]};
             this.uniforms[`uLightColor[${i}]`] = {type: '4fv', value: [0, 0, 0, 0]};
@@ -59,13 +70,16 @@ class SMapFilter extends PIXI.AbstractFilter {
         );
     }
 
+    render(group) {
+        this.lightMapRT.render(group, null, true);
+    }
+
     applyFilter(renderer, input, output) {
         this.filterShadowTexture.applyFilter(renderer, input, this.renderTarget, true);
 
+        //this.defaultFilter.applyFilter(renderer, input, output, true);
         this.filterShadowCast.applyFilter(renderer, input, output);
         //this.defaultFilter.applyFilter(renderer, this.renderTarget, output);
-
-        //this.defaultFilter.applyFilter(renderer, input, output, true);
     }
 
     applyDefinitions(shader) {

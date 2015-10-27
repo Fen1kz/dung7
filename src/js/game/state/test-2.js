@@ -9,7 +9,7 @@ let Circle = require('game/entities/circle');
 class Test1 extends State {
     preload(loader) {
         loader.add('assets/gfx/texture1.png');
-        loader.add('assets/gfx/mansionNormals.png');
+        loader.add('assets/gfx/brickFloor.png');
     }
 
     create() {
@@ -51,7 +51,8 @@ class Test1 extends State {
             }
         });
 
-        this.mansion = PIXI.Sprite.fromImage('assets/gfx/texture1.png');
+        this.floor = PIXI.Sprite.fromImage('assets/gfx/brickFloor.png');
+        this.stage.addChild(this.floor);
 
         this.renderGroup = new PIXI.Container();
 
@@ -72,12 +73,13 @@ class Test1 extends State {
         this.c4.destroyDraggable();
         this.renderGroup.addChild(this.c4);
 
-        this.stage.addChild(this.renderGroup);
 
-        this.lightMapRT = new PIXI.RenderTexture(this.game.renderer, this.game.width, this.game.height);
-        this.lightMapSprite = new PIXI.Sprite(this.lightMapRT);
-        this.stage.addChild(this.lightMapSprite);
-        this.lightMapSprite.filters = [this.SMapFilter];
+        this.globalRT = new PIXI.RenderTexture(this.game.renderer, this.game.width, this.game.height);
+        this.globalSprite = new PIXI.Sprite(this.globalRT);
+        this.globalSprite.filters = [this.SMapFilter];
+        this.stage.addChild(this.globalSprite);
+
+        this.stage.addChild(this.renderGroup);
 
         window.state = this;
         this.timer = new Date();
@@ -87,8 +89,8 @@ class Test1 extends State {
         this.l4.update = () => {
             let now = new Date();
             let time = (now - this.timer);
-            this.l4.x = 200 + 80 * Math.cos(-time * 0.1 * Math.PI / 180);
-            this.l4.y = 200 + 80 * Math.sin(-time * 0.1 * Math.PI / 180);
+            this.l4.x = 200 + 80 * Math.cos(-time * 0.05 * Math.PI / 180);
+            this.l4.y = 200 + 80 * Math.sin(-time * 0.05 * Math.PI / 180);
         };
         this.lights.push(this.l4);
         this.stage.addChild(this.l4);
@@ -98,9 +100,11 @@ class Test1 extends State {
         let now = new Date();
         let time = (now - this.timer);
         if (this.l4) this.l4.update();
-        this.c4.x = 200 + 100 * Math.cos(time * 0.1 * Math.PI / 180);
-        this.c4.y = 200 + 100 * Math.sin(time * 0.1 * Math.PI / 180);
-        this.lightMapRT.render(this.renderGroup, null, true);
+        this.c4.x = 200 + 100 * Math.cos(time * 0.05 * Math.PI / 180);
+        this.c4.y = 200 + 100 * Math.sin(time * 0.05 * Math.PI / 180);
+
+        this.globalRT.render(this.stage, null, true);
+        this.SMapFilter.render(this.renderGroup);
 
         let pointer = this.game.renderer.plugins.interaction.mouse.global;
         this.SMapFilter.uniforms['uLightPosition[0]'].value[0] = pointer.x;
@@ -108,7 +112,7 @@ class Test1 extends State {
         this.lights.forEach((light, index) => {
             this.SMapFilter.uniforms[`uLightPosition[${index + 1}]`].value[0] = light.x;
             this.SMapFilter.uniforms[`uLightPosition[${index + 1}]`].value[1] = light.y;
-        })
+        });
         //console.log(this.game.renderer.plugins.interaction.mouse.global.x, this.game.renderer.plugins.interaction.mouse.global.y);
     }
 }

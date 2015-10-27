@@ -6,9 +6,9 @@ export default function (gulp, $, config) {
         gulp.src([])
             .pipe($.tap((file) => console.log(file.path))));
 
-    gulp.task('build', ['copy', 'scripts:local', 'styles:local']);
+    gulp.task('build', ['scripts:local', 'styles:local']);
 
-    gulp.task('dist', $.sequence('clean:all', ['build', 'scripts', 'styles']));
+    gulp.task('dist', $.sequence('clean:all', ['copy', 'build', 'scripts', 'styles']));
 
     gulp.task('reload', () => {
         $.livereload.changed();
