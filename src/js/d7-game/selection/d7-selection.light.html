@@ -1,2 +1,22 @@
-<div>light {{selectionCtrl.selection | json}}</div>
-<!--ng-if="selection.type === 'light'"-->
+<div layout-margin sng-if="selectionCtrl.selection.type === 'light'">
+    {{selectionCtrl.r}}
+    <div layout layout-align="center center">
+        <div flex="10">R</div>
+        <md-slider class="md-primary" aria-label="!" flex ng-model="selectionCtrl.object.color.r" min="0" max="255"></md-slider>
+        <div flex="10">{{selectionCtrl.object.color.r}}</div>
+    </div>
+    <div layout layout-align="center center">
+        <div flex="10">G</div>
+        <md-slider class="md-primary" aria-label="!" flex ng-model="selectionCtrl.object.color.g" min="0" max="255"></md-slider>
+        <div flex="10">{{selectionCtrl.object.color.g}}</div>
+    </div>
+    <div layout layout-align="center center">
+        <div flex="10">B</div>
+        <md-slider class="md-primary" aria-label="!" flex ng-model="selectionCtrl.object.color.b" min="0" max="255"></md-slider>
+        <div flex="10">{{selectionCtrl.object.color.b}}</div>
+    </div>
+    <div layout layout-align="center center">
+        <div flex="10">Raduis: </div>
+        <input ng-model="selectionCtrl.object.radius"></input>
+    </div>
+</div>

@@ -13,7 +13,7 @@ class Mixin {
         return this.name.toLowerCase();
     }
 
-    static mix(target) {
+    static mix(target, ...args) {
         let name = this.getName();
 
         if (!target.mixins) {
@@ -23,7 +23,7 @@ class Mixin {
         if (target.mixins[name]) {
             return target.mixins[name];
         } else {
-            return new this(target);
+            return new this(target, ...args);
         }
     }
 

@@ -6,7 +6,7 @@
         <md-button ng-click="event('light.add')">add light</md-button>
         <md-button ng-click="event('light.remove')">remove light</md-button>
     </div>
-    <div>
-        <d7-selection.light selection="selection"></d7-selection.light>
+    <div style="min-width: 300px">
+        <d7-selection.light ng-if="selection.type === 'light'" selection="selection.object"></d7-selection.light>
     </div>
 </div>

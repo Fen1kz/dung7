@@ -90,6 +90,9 @@ class Test1 extends State {
 
         this.l4 = new Circle(this.game, 0, 0, 10, 0xFFFF00);
         //this.l4.D();
+        Selectable.mix(this.l4, {
+            type: 'light'
+        });
         this.l4.update = () => {
             let now = new Date();
             let time = (now - this.timer);

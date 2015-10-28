@@ -30,8 +30,9 @@ function link(scope, element, attr, ctrl) {
     };
 
     scope.selection = {};
-    game.on('object.selected', (event, type, object) => {
+    game.on('object.selected', (event, object, type) => {
         scope.selection.type = type;
         scope.selection.object = object;
+        scope.$digest();
     });
 }

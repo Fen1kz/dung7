@@ -14,7 +14,7 @@ class Graphics extends PIXI.Graphics {
     }
 
     destroy() {
-        this.events.fire('destroy');
+        this.trigger('destroy');
         if (this.parent) this.parent.removeChild(this);
     }
 }
