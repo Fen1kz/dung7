@@ -15,14 +15,14 @@ class Test1 extends State {
     }
 
     create() {
-        this.SHADER_SIZE = 256;
+        this.SHADER_SIZE = 512;
 
         this.SMapFilter = new SMapFilter(this.game, {
             gameResolution: {type: '2fv', value: [this.game.width, this.game.height]}
             , shaderResolution: {type: '2fv', value: [this.SHADER_SIZE, this.SHADER_SIZE]}
-            , rtResolution: {type: '2fv', value: [this.SHADER_SIZE, 64]}
+            , rtSize: {type: '2fv', value: [this.SHADER_SIZE * 2, 64]}
         }, {
-            LIGHTS_COUNT: 64
+            LIGHTS_COUNT: 8
         });
 
         let spheres = [];
@@ -41,15 +41,18 @@ class Test1 extends State {
         this.game.on('light.add', () => {
             let light = new Circle(this.game, this.game.width / 2, this.game.height / 2, 10, 0xFFFF00);
             this.lights.push(light);
+            light.uLightPosition = this.SMapFilter.uniforms[`uLightPosition[${this.lights.length - 1}]`];
+            light.uLightColor = this.SMapFilter.uniforms[`uLightColor[${this.lights.length - 1}]`];
             this.stage.addChild(light);
             Selectable.mix(light, {
                 type: 'light'
             });
-            this.SMapFilter.uniforms[`uLightColor[${this.lights.length}]`].value[3] = 1;
+            light.uLightPosition.value[2] = 1.0;
+            //light.uLightColor.value[3] = 1;
         });
         this.game.on('light.remove', () => {
-            this.SMapFilter.uniforms[`uLightColor[${this.lights.length}]`].value[3] = 0.0;
             let light = this.lights.pop();
+            light.uLightPosition.value[2] = 0.0;
             if (light) {
                 light.destroy();
             }
@@ -100,6 +103,8 @@ class Test1 extends State {
             this.l4.y = 200 + 80 * Math.sin(-time * 0.05 * Math.PI / 180);
         };
         this.lights.push(this.l4);
+        this.l4.uLightPosition = this.SMapFilter.uniforms[`uLightPosition[0]`];
+        this.l4.uLightColor = this.SMapFilter.uniforms[`uLightColor[0]`];
         this.stage.addChild(this.l4);
     }
 
@@ -114,11 +119,11 @@ class Test1 extends State {
         this.SMapFilter.render(this.renderGroup);
 
         let pointer = this.game.renderer.plugins.interaction.mouse.global;
-        this.SMapFilter.uniforms['uLightPosition[0]'].value[0] = pointer.x;
-        this.SMapFilter.uniforms['uLightPosition[0]'].value[1] = pointer.y;
+        //this.SMapFilter.uniforms['uLightPosition[0]'].value[0] = pointer.x;
+        //this.SMapFilter.uniforms['uLightPosition[0]'].value[1] = pointer.y;
         this.lights.forEach((light, index) => {
-            this.SMapFilter.uniforms[`uLightPosition[${index + 1}]`].value[0] = light.x;
-            this.SMapFilter.uniforms[`uLightPosition[${index + 1}]`].value[1] = light.y;
+            light.uLightPosition.value[0] = light.x;
+            light.uLightPosition.value[1] = light.y;
         });
         //console.log(this.game.renderer.plugins.interaction.mouse.global.x, this.game.renderer.plugins.interaction.mouse.global.y);
     }

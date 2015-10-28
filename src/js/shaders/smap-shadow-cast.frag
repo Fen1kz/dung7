@@ -8,7 +8,7 @@ uniform vec2 shaderResolution;
 
 uniform sampler2D shadowMapChannel;
 
-uniform vec3 uLightPosition[LIGHTS_COUNT];
+uniform vec4 uLightPosition[LIGHTS_COUNT];
 uniform vec4 uLightColor[LIGHTS_COUNT];
 
 const float PI = 3.14159265358;//9793238462643383279502884197169399375105820974944592307816406286;
@@ -78,18 +78,21 @@ void main() {
 
     float lightLookupHalfStep = (1.0 / float(LIGHTS_COUNT)) * .5;
 
+//    const int lightNumber = 0;
     for (int lightNumber = 0; lightNumber < LIGHTS_COUNT; lightNumber += 1) {
-        vec2 lightPosition = uLightPosition[lightNumber].xy;
-        vec4 lightColor = uLightColor[lightNumber];
-        if (lightColor.a == 0.) {
+        float lightSize = uLightPosition[lightNumber].z;
+        if (lightSize == 0.) {
             continue;
         }
+        vec2 lightPosition = uLightPosition[lightNumber].xy;
+        vec4 lightColor = uLightColor[lightNumber];
         float lightLuminosity = 0.0;
+
         float yCoord = float(lightNumber) / float(LIGHTS_COUNT) + lightLookupHalfStep;
 
         vec2 localLightPosition = lightPosition / gameResolution;
         vec2 toLight = vTextureCoord - localLightPosition;// + realCoord * 2.0 - vec2(1.0, 1.0);
-        toLight = toLight * (gameResolution / shaderResolution);
+        toLight = toLight * (gameResolution / shaderResolution) / lightSize;
         float angleToPoint = atan(toLight.y, toLight.x);
 
         float angleCoordOnMap = angleToPoint / (2.0 * PI);

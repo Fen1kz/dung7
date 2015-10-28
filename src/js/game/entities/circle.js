@@ -9,7 +9,7 @@ class Circle extends Graphics {
         Clickable.mix(this);
 
         this.color = color;
-        this.radius = radius;
+        this.radius = radius / 10;
         this.change();
 
         this.on('change', this.change)
@@ -18,9 +18,14 @@ class Circle extends Graphics {
     change() {
         this.clear();
         this.beginFill(this.color);
-        this.drawCircle(0, 0, this.radius);
+        this.drawCircle(0, 0, 10);
         this.endFill();
+
+        if (this.uLightPosition) {
+            this.uLightPosition.value[2] = this.radius;
+        }
     }
+
 }
 
 export default Circle;

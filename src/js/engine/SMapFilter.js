@@ -14,14 +14,14 @@ class SMapFilter extends PIXI.AbstractFilter {
 
         this.renderTarget = new PIXI.RenderTarget(
             this.game.renderer.gl
-            , this.uniforms.rtResolution.value[0]
-            , this.uniforms.rtResolution.value[1]
+            , this.uniforms.rtSize.value[0]
+            , this.uniforms.rtSize.value[1]
             , PIXI.SCALE_MODES.LINEAR
-            , 4);
+            , 1);
 
         this.renderTarget.transform = new PIXI.Matrix()
             .scale(
-            this.uniforms.shaderResolution.value[0] / this.game.width
+                this.uniforms.rtSize.value[0] / this.game.width
             , this.uniforms.shaderResolution.value[1] / this.game.height);
 
         this.defaultFilter = new PIXI.AbstractFilter(null, require('shaders/smap-test.frag'));
@@ -29,7 +29,7 @@ class SMapFilter extends PIXI.AbstractFilter {
         //this.uniforms = {
         //    gameResolution: _.clone(uniforms.gameResolution)
         //    , shaderResolution: _.clone(uniforms.shaderResolution)
-        //    , rtResolution: _.clone(uniforms.rtResolution)
+        //    , rtSize: _.clone(uniforms.rtSize)
         //};
         this.uniforms.uLightMap = {
             type: 'sampler2D',
@@ -42,11 +42,11 @@ class SMapFilter extends PIXI.AbstractFilter {
             //}
         };
         _.range(this.definitions.LIGHTS_COUNT).forEach(i => {
-            this.uniforms[`uLightPosition[${i}]`] = {type: '3fv', value: [0, 0, 0]};
-            this.uniforms[`uLightColor[${i}]`] = {type: '4fv', value: [0, 0, 0, 0]};
+            this.uniforms[`uLightPosition[${i}]`] = {type: '4fv', value: [0, 0, 0, 1]};
+            this.uniforms[`uLightColor[${i}]`] = {type: '4fv', value: [1, 1, 1, 0]};
         });
         this.uniforms[`uLightColor[0]`].value[3] = 1.0;
-        this.uniforms[`uLightColor[1]`].value[3] = 1.0;
+        //this.uniforms[`uLightColor[1]`].value[3] = 1.0;
         this.filterShadowTexture = new PIXI.AbstractFilter(
             null
             , this.applyDefinitions(fragShadowTexture)
