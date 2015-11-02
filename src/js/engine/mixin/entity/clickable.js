@@ -8,9 +8,9 @@ class Clickable extends Mixin {
             let off = target.on('mouse.up', (event2) => {
                 target.trigger('mouse.click', event1, event2);
             });
-            this.timer = setTimeout(() => {
-                off();
-            }, 200);
+            //this.timer = setTimeout(() => {
+            //    off();
+            //}, 200);
         });
     }
 }

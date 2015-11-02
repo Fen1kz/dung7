@@ -21,7 +21,7 @@ class SMapFilter extends PIXI.AbstractFilter {
 
         this.renderTarget.transform = new PIXI.Matrix()
             .scale(
-                this.uniforms.rtSize.value[0] / this.game.width
+            this.uniforms.rtSize.value[0] / this.game.width
             , this.uniforms.shaderResolution.value[1] / this.game.height);
 
         this.defaultFilter = new PIXI.AbstractFilter(null, require('shaders/smap-test.frag'));
@@ -41,6 +41,11 @@ class SMapFilter extends PIXI.AbstractFilter {
             //    }
             //}
         };
+        this.uniforms.uAmbient = {
+            type: '4fv'
+            , value: _.range(4).map(_ => .2)
+        };
+
         _.range(this.definitions.LIGHTS_COUNT).forEach(i => {
             this.uniforms[`uLightPosition[${i}]`] = {type: '4fv', value: [0, 0, 0, 1]};
             this.uniforms[`uLightColor[${i}]`] = {type: '4fv', value: [1, 1, 1, 0]};

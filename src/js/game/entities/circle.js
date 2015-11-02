@@ -10,6 +10,7 @@ class Circle extends Graphics {
 
         this.color = color;
         this.radius = radius / 10;
+        this.falloff = 0;
         this.change();
 
         this.on('change', this.change)
@@ -23,6 +24,7 @@ class Circle extends Graphics {
 
         if (this.uLightPosition) {
             this.uLightPosition.value[2] = this.radius;
+            this.uLightPosition.value[3] = this.falloff;
         }
     }
 

@@ -8,6 +8,7 @@ uniform vec2 shaderResolution;
 
 uniform sampler2D shadowMapChannel;
 
+uniform vec4 uAmbient;
 uniform vec4 uLightPosition[LIGHTS_COUNT];
 uniform vec4 uLightColor[LIGHTS_COUNT];
 
@@ -81,6 +82,7 @@ void main() {
 //    const int lightNumber = 0;
     for (int lightNumber = 0; lightNumber < LIGHTS_COUNT; lightNumber += 1) {
         float lightSize = uLightPosition[lightNumber].z;
+        float lightFalloff = min(0.99, uLightPosition[lightNumber].a);
         if (lightSize == 0.) {
             continue;
         }
@@ -108,21 +110,24 @@ void main() {
 //            * step(shadowcaster, light)
 //            * (1.0 - step(1.0, shadowcaster));
 
-        float blur = 1. * smoothstep(0.,1.,light);
+        float blur = 1. * smoothstep(lightFalloff, 1., light);
 
         float sum = blurH2(shadowMapChannel, samplePoint, light, blur).a;
 //        allLuminosity = sum;
 
-        lightLuminosity = sum * smoothstep(1.0, 0.0, light);
+        lightLuminosity = sum * smoothstep(1.0, lightFalloff, light);
+
         allLuminosity += lightLuminosity;
     }
-    color.rgb = vec3(allLuminosity);
+
+    color = vec4(vec3(allLuminosity), 1.0);
+    color = clamp(color, uAmbient, vec4(1.1));
 //    color.a = 1.0 - allLuminosity;
 //    color = texture2D(shadowMapChannel, vTextureCoord);
 
     vec4 base = texture2D(uSampler, vTextureCoord);
     //color = blurH(uSampler, vTextureCoord, 1.0);
 
-    gl_FragColor = base * color;
+    gl_FragColor = vec4(base.rgb * color.rgb, 1.0);
 //    gl_FragColor = color;
 }

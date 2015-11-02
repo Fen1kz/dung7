@@ -43,12 +43,11 @@ class Test1 extends State {
             this.lights.push(light);
             light.uLightPosition = this.SMapFilter.uniforms[`uLightPosition[${this.lights.length - 1}]`];
             light.uLightColor = this.SMapFilter.uniforms[`uLightColor[${this.lights.length - 1}]`];
+            light.change();
             this.stage.addChild(light);
             Selectable.mix(light, {
                 type: 'light'
             });
-            light.uLightPosition.value[2] = 1.0;
-            //light.uLightColor.value[3] = 1;
         });
         this.game.on('light.remove', () => {
             let light = this.lights.pop();
@@ -105,6 +104,7 @@ class Test1 extends State {
         this.lights.push(this.l4);
         this.l4.uLightPosition = this.SMapFilter.uniforms[`uLightPosition[0]`];
         this.l4.uLightColor = this.SMapFilter.uniforms[`uLightColor[0]`];
+        this.l4.change();
         this.stage.addChild(this.l4);
     }
 
