@@ -30,6 +30,7 @@ function controllerFactory() {
                 }
                 , radius: this.selection.radius * 100
                 , falloff: this.selection.falloff * 100
+                , ambient: this.selection.ambient * 100
             };
         });
 
@@ -37,6 +38,7 @@ function controllerFactory() {
             if (newValue !== void 0) {
                 this.selection.radius = this.object.radius / 100;
                 this.selection.falloff = this.object.falloff / 100;
+                this.selection.ambient = this.object.ambient / 100;
                 this.selection.color = (this.object.color.r << 0x10) + (this.object.color.g << 0x8) + this.object.color.b;
                 this.selection.trigger('change');
             }

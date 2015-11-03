@@ -9,8 +9,9 @@ class Circle extends Graphics {
         Clickable.mix(this);
 
         this.color = color;
-        this.radius = radius / 10;
+        this.radius = .5;
         this.falloff = 0;
+        this.ambient = .5;
         this.change();
 
         this.on('change', this.change)
@@ -23,6 +24,11 @@ class Circle extends Graphics {
         this.endFill();
 
         if (this.uLightPosition) {
+            this.uLightColor.value[0] = (this.color >> 0x10) / 255;
+            this.uLightColor.value[1] = ((this.color >> 0x8) % 0x100) / 255;
+            this.uLightColor.value[2] = (this.color % 0x100) / 255;
+            this.uLightColor.value[3] = this.ambient;
+
             this.uLightPosition.value[2] = this.radius;
             this.uLightPosition.value[3] = this.falloff;
         }

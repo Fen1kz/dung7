@@ -43,7 +43,7 @@ class SMapFilter extends PIXI.AbstractFilter {
         };
         this.uniforms.uAmbient = {
             type: '4fv'
-            , value: _.range(4).map(_ => .2)
+            , value: _.range(4).map(_ => .0)
         };
 
         _.range(this.definitions.LIGHTS_COUNT).forEach(i => {

@@ -26,4 +26,9 @@
         <md-slider flex class="md-primary" aria-label="!" flex ng-model="selectionCtrl.object.falloff" min="0" max="100" step="5"></md-slider>
         <div layout-padding flex="10">{{selectionCtrl.object.falloff / 100}}</div>
     </div>
+    <div layout layout-align="center center">
+        <div flex="20">Ambient</div>
+        <md-slider flex class="md-primary" aria-label="!" flex ng-model="selectionCtrl.object.ambient" min="0" max="100" step="5"></md-slider>
+        <div layout-padding flex="10">{{selectionCtrl.object.ambient / 100}}</div>
+    </div>
 </div>
