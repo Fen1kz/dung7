@@ -31,13 +31,14 @@ void main(void) {
         }
     }
     vec2 localLightPosition = lightPosition / gameResolution;
-    float dst = 1.0;
+    float dst = lightSize;
     for (float y = 0.0; y < SIZE; y += 1.0) {
-        float distance = y / SIZE;
+        float distance = (y / SIZE) * lightSize;
 //        float distance = vTextureCoord.y;
         float angle = vTextureCoord.x * (2.0 * PI);
+//        float angle = vTextureCoord.x * (2.0 * PI);
         vec2 coord = vec2(cos(angle) * distance, sin(angle) * distance);
-        coord = localLightPosition + coord / (gameResolution / shaderResolution);
+        coord = localLightPosition + coord / (gameResolution / shaderResolution);// / lightSize;
         coord = clamp(coord, .0, 1.0);
         vec4 data = texture2D(uLightMap, coord);
 //      color = data;

@@ -15,14 +15,39 @@ class Test1 extends State {
     }
 
     create() {
-        this.SHADER_SIZE = 512;
+        require('engine/mixin/entity/input').mix(this.stage);
+        this.stage.on('mouse.down', ($event) => {
+            this.pressed = true;
+        });
+        this.stage.on('mouse.up', ($event) => {
+            this.pressed = false;
+        });
+        this.brushGroup = new PIXI.Container();
+        this.stage.addChild(this.brushGroup);
+        this.game.on('draw', ($event) => {
+            if (!this.brush) {
+                $event.currentTarget.classList.add('md-warn');
+                $event.currentTarget.innerHTML = 'Draw (ON)';
+                this.brush = new Circle(this.game, this.game.width / 2, this.game.height / 2, 5, 0x0);
+                this.brushGroup.addChild(this.brush);
+                this.stage.input.on();
+            } else {
+                $event.currentTarget.classList.remove('md-warn');
+                $event.currentTarget.innerHTML = 'Draw (OFF)';
+                this.brush.destroy();
+                this.brush = void 0;
+                this.stage.input.off();
+            }
+        });
+
+        this.SHADER_SIZE = 1;
 
         this.SMapFilter = new SMapFilter(this.game, {
             gameResolution: {type: '2fv', value: [this.game.width, this.game.height]}
             , shaderResolution: {type: '2fv', value: [this.SHADER_SIZE, this.SHADER_SIZE]}
-            , rtSize: {type: '2fv', value: [this.SHADER_SIZE * 2, 64]}
+            , rtSize: {type: '2fv', value: [1024, 16]}
         }, {
-            LIGHTS_COUNT: 8
+            LIGHTS_COUNT: 16
         });
 
         let spheres = [];
@@ -57,7 +82,8 @@ class Test1 extends State {
             }
         });
 
-        this.floor = PIXI.Sprite.fromImage('assets/gfx/brickFloor.png');
+        let floorTexture = PIXI.Texture.fromImage('assets/gfx/brickFloor.png');
+        this.floor = new PIXI.Sprite(floorTexture, this.game.width, this.game.height);
         this.stage.addChild(this.floor);
 
         this.renderGroup = new PIXI.Container();
@@ -79,6 +105,9 @@ class Test1 extends State {
         //this.c4.destroyDraggable();
         this.renderGroup.addChild(this.c4);
 
+        this.paintRT = new PIXI.RenderTexture(this.game.renderer, this.game.width, this.game.height);
+        this.paintSprite = new PIXI.Sprite(this.paintRT);
+        //this.stage.addChild(this.paintSprite);
 
         this.globalRT = new PIXI.RenderTexture(this.game.renderer, this.game.width, this.game.height);
         this.globalSprite = new PIXI.Sprite(this.globalRT);
@@ -106,6 +135,8 @@ class Test1 extends State {
         this.l4.uLightColor = this.SMapFilter.uniforms[`uLightColor[0]`];
         this.l4.change();
         this.stage.addChild(this.l4);
+
+        this.renderGroup.addChild(this.paintSprite);
     }
 
     update() {
@@ -126,6 +157,17 @@ class Test1 extends State {
             light.uLightPosition.value[1] = light.y;
         });
         //console.log(this.game.renderer.plugins.interaction.mouse.global.x, this.game.renderer.plugins.interaction.mouse.global.y);
+
+        if (this.brush) {
+            this.brush.x = pointer.x;
+            this.brush.y = pointer.y;
+            if (this.pressed) {
+                //this.brush.x = 40;
+                //this.paintRT.render(this.brush, pointer);
+                this.paintRT.render(this.brushGroup);
+                //this.paintRT.render(this.brush);
+            }
+        }
     }
 }
 

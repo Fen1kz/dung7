@@ -1,6 +1,7 @@
 <div layout="row">
     <div>
         <div id="canvas"></div>
+        <md-button class="md-primary" ng-click="event('draw', $event)">Draw (OFF)</md-button>
         <md-button ng-click="event('sphere.add')">add sphere</md-button>
         <md-button ng-click="event('sphere.remove')">remove sphere</md-button>
         <md-button ng-click="event('light.add')">add light</md-button>

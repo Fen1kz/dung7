@@ -1,15 +1,14 @@
 let PIXI = require('pixi.js');
-let Events = require('engine/mixin/events');
 
 class D7Game {
     constructor() {
-        this.width = 512;
-        this.height = 512;
+        this.width = 500;
+        this.height = 400;
         this.renderer = new PIXI.WebGLRenderer(this.width, this.height, {backgroundColor: 0x1099bb});
         //this.renderer = new PIXI.CanvasRenderer(400, 300, {backgroundColor: 0x1099bb});
         this.state = new (require('engine/StateManager'))(this);
 
-        Events.mix(this);
+        require('engine/mixin/events').mix(this);
     }
 
     load(name, url) {

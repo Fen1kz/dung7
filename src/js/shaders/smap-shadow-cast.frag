@@ -14,6 +14,14 @@ uniform vec4 uLightColor[LIGHTS_COUNT];
 
 const float PI = 3.14159265358;//9793238462643383279502884197169399375105820974944592307816406286;
 
+float snoise(vec2 co) {
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453) * 2.0 - 1.0;
+}
+
+float noise() {
+    return snoise(vTextureCoord);
+}
+
 vec4 takeSample(in sampler2D texture, in vec2 coord, in float light) {
     return step(light, texture2D(texture, coord));
 //    return texture2D(texture, coord);
@@ -66,22 +74,23 @@ void main() {
         vec2 localLightPosition = lightPosition / gameResolution;
         vec2 toLight = vTextureCoord - localLightPosition;// + realCoord * 2.0 - vec2(1.0, 1.0);
         toLight = toLight * (gameResolution / shaderResolution) / lightSize;
+        float light = length(toLight);
         float angleToPoint = atan(toLight.y, toLight.x);
 
-        float angleCoordOnMap = angleToPoint / (2.0 * PI);
+        float angleCoordOnMap = angleToPoint / (2.0 * PI) + 0.00075 * snoise(-toLight);
 
         vec2 samplePoint = vec2(angleCoordOnMap, yCoord);
 //        vec4 LMapColor = texture2D(shadowMapChannel, samplePoint);
 
 //        float shadowcaster = texture2D(shadowMapChannel, samplePoint).a;
-        float light = length(toLight);
 
 //        float blur = 2. * smoothstep(0., 1.0, light - shadowcaster)
 //        float blur = 2. * smoothstep(0., 1.0, light)
 //            * step(shadowcaster, light)
 //            * (1.0 - step(1.0, shadowcaster));
 
-        float blur = 1. * smoothstep(lightFalloff, 1., light);// * (1.0 + 1.0 * lightColor.a);
+        float blur = smoothstep(0., 5., light);
+//        float blur = 1. * smoothstep(lightFalloff, 1., light);// * (1.0 + 1.0 * lightColor.a);
 
         float sum = blurH2(shadowMapChannel, samplePoint, light, blur).a;
 //        allLuminosity = sum;
