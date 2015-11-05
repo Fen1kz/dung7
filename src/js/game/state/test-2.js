@@ -40,11 +40,11 @@ class Test1 extends State {
             }
         });
 
-        this.SHADER_SIZE = 1;
+        this.SHADER_SIZE = 256;
 
         this.SMapFilter = new SMapFilter(this.game, {
             gameResolution: {type: '2fv', value: [this.game.width, this.game.height]}
-            , shaderResolution: {type: '2fv', value: [this.SHADER_SIZE, this.SHADER_SIZE]}
+            , shaderResolution: {type: '2fv', value: [0,0]}
             , rtSize: {type: '2fv', value: [1024, 16]}
         }, {
             LIGHTS_COUNT: 16

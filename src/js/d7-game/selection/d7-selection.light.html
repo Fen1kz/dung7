@@ -17,14 +17,14 @@
     </div>
 
     <div layout layout-align="center center">
+        <div flex="20">Radius</div>
+        <md-slider class="md-primary" aria-label="!" flex ng-model="selectionCtrl.object.radius" min="0" max="1024" step="64"></md-slider>
+        <div layout-padding flex="10">{{selectionCtrl.object.radius}}</div>
+    </div>
+    <div layout layout-align="center center">
         <div flex="20">Size</div>
         <md-slider class="md-primary" aria-label="!" flex ng-model="selectionCtrl.object.size" min="0" max="100" step="1"></md-slider>
         <div layout-padding flex="10">{{selectionCtrl.object.size / 100}}</div>
-    </div>
-    <div layout layout-align="center center">
-        <div flex="20">Radius</div>
-        <md-slider class="md-primary" aria-label="!" flex ng-model="selectionCtrl.object.radius" min="0" max="400" step="5"></md-slider>
-        <div layout-padding flex="10">{{selectionCtrl.object.radius / 100}}</div>
     </div>
     <div layout layout-align="center center">
         <div flex="20">Falloff</div>

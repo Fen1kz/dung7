@@ -4,7 +4,6 @@ varying vec2 vTextureCoord;
 uniform sampler2D uSampler;
 
 uniform vec2 gameResolution;
-uniform vec2 shaderResolution;
 uniform vec2 rtSize;
 
 uniform vec4 uLightPosition[LIGHTS_COUNT];
@@ -19,26 +18,25 @@ const float THRESHOLD = 0.01;
 void main(void) {
     vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
 
-    float yCoord = vTextureCoord.y * (shaderResolution.y / rtSize.y);
+    float yCoord = vTextureCoord.y * rtSize.y;
     int lightnum = int(floor(yCoord * float(LIGHTS_COUNT)));
     vec2 lightPosition;
     float lightSize;
     for (int i = 0; i < LIGHTS_COUNT; i += 1) {
         if (lightnum == i) {
-            lightPosition = uLightPosition[i].xy;
-            lightSize = uLightPosition[i].z;
+            lightPosition = uLightPosition[i].xy / gameResolution;
+            lightSize = uLightPosition[i].z / max(gameResolution.x, gameResolution.y);
             break;
         }
     }
-    vec2 localLightPosition = lightPosition / gameResolution;
-    float dst = lightSize;
+    float dst = 1.0;
     for (float y = 0.0; y < SIZE; y += 1.0) {
-        float distance = (y / SIZE) * lightSize;
+        float distance = (y / SIZE);
 //        float distance = vTextureCoord.y;
         float angle = vTextureCoord.x * (2.0 * PI);
 //        float angle = vTextureCoord.x * (2.0 * PI);
         vec2 coord = vec2(cos(angle) * distance, sin(angle) * distance);
-        coord = localLightPosition + coord / (gameResolution / shaderResolution);// / lightSize;
+        coord = lightPosition + coord / (max(gameResolution.x, gameResolution.y) / gameResolution);// / lightSize;
         coord = clamp(coord, .0, 1.0);
         vec4 data = texture2D(uLightMap, coord);
 //      color = data;
@@ -47,7 +45,7 @@ void main(void) {
             break;
         }
     }
-    color = vec4(vec3(0.0), dst * (1. / lightSize));
+    color = vec4(vec3(0.0), dst / lightSize);
 //    color = vec4(vec3(0.0), 1.0);
 //    color.g = vTextureCoord.x;
 //    color.r = yCoord;

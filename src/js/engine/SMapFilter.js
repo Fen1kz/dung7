@@ -22,7 +22,7 @@ class SMapFilter extends PIXI.AbstractFilter {
         this.renderTarget.transform = new PIXI.Matrix()
             .scale(
             this.uniforms.rtSize.value[0] / this.game.width
-            , this.uniforms.shaderResolution.value[1] / this.game.height);
+            , 1.0);
 
         this.defaultFilter = new PIXI.AbstractFilter(null, require('shaders/smap-test.frag'));
 

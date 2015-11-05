@@ -2,8 +2,8 @@ let PIXI = require('pixi.js');
 
 class D7Game {
     constructor() {
-        this.width = 500;
-        this.height = 400;
+        this.width = 1024;
+        this.height = 512;
         this.renderer = new PIXI.WebGLRenderer(this.width, this.height, {backgroundColor: 0x1099bb});
         //this.renderer = new PIXI.CanvasRenderer(400, 300, {backgroundColor: 0x1099bb});
         this.state = new (require('engine/StateManager'))(this);

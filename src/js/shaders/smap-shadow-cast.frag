@@ -4,7 +4,6 @@ uniform sampler2D uSampler;
 varying vec2 vTextureCoord;
 
 uniform vec2 gameResolution;
-uniform vec2 shaderResolution;
 
 uniform sampler2D shadowMapChannel;
 
@@ -60,24 +59,25 @@ void main() {
 
 //    const int lightNumber = 0;
     for (int lightNumber = 0; lightNumber < LIGHTS_COUNT; lightNumber += 1) {
-        float lightSize = uLightPosition[lightNumber].z;
+        float lightSize = uLightPosition[lightNumber].z / max(gameResolution.x, gameResolution.y);
         float lightFalloff = min(0.99, uLightPosition[lightNumber].a);
         if (lightSize == 0.) {
             continue;
         }
-        vec2 lightPosition = uLightPosition[lightNumber].xy;
+        vec2 lightPosition = uLightPosition[lightNumber].xy / gameResolution;
         vec4 lightColor = uLightColor[lightNumber];
         vec3 lightLuminosity = vec3(0.0);
 
         float yCoord = float(lightNumber) / float(LIGHTS_COUNT) + lightLookupHalfStep;
 
-        vec2 localLightPosition = lightPosition / gameResolution;
-        vec2 toLight = vTextureCoord - localLightPosition;// + realCoord * 2.0 - vec2(1.0, 1.0);
-        toLight = toLight * (gameResolution / shaderResolution) / lightSize;
+        vec2 toLight = vTextureCoord - lightPosition;// + realCoord * 2.0 - vec2(1.0, 1.0);
+
+        toLight = toLight * vec2(1.0, 0.5) / lightSize;
+
         float light = length(toLight);
         float angleToPoint = atan(toLight.y, toLight.x);
 
-        float angleCoordOnMap = angleToPoint / (2.0 * PI) + 0.00075 * snoise(-toLight);
+        float angleCoordOnMap = angleToPoint / (2.0 * PI);// + 0.00075 * snoise(-toLight);
 
         vec2 samplePoint = vec2(angleCoordOnMap, yCoord);
 //        vec4 LMapColor = texture2D(shadowMapChannel, samplePoint);
@@ -113,5 +113,7 @@ void main() {
     //color = blurH(uSampler, vTextureCoord, 1.0);
 
     gl_FragColor = vec4(base.rgb * sqrt(color.rgb), 1.0);
+//    color = vec4(vec3(0.0), 1.0);
+//    color.r = light;
 //    gl_FragColor = color;
 }
