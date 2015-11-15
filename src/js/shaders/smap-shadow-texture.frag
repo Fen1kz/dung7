@@ -15,10 +15,15 @@ const float PI = 3.1415926535897932384626433832795028841971693993751058209749445
 const float SIZE = 256.0;
 const float THRESHOLD = 0.01;
 
+//vec2 relativeResolution() {
+//    return (max(gameResolution.x, gameResolution.y) / gameResolution);
+//}
+
 void main(void) {
+    vec2 relativeResolution = (max(gameResolution.x, gameResolution.y) / gameResolution);
     vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
 
-    float yCoord = vTextureCoord.y * rtSize.y;
+    float yCoord = vTextureCoord.y;// * rtSize.y;
     int lightnum = int(floor(yCoord * float(LIGHTS_COUNT)));
     vec2 lightPosition;
     float lightSize;
@@ -36,7 +41,7 @@ void main(void) {
         float angle = vTextureCoord.x * (2.0 * PI);
 //        float angle = vTextureCoord.x * (2.0 * PI);
         vec2 coord = vec2(cos(angle) * distance, sin(angle) * distance);
-        coord = lightPosition + coord / (max(gameResolution.x, gameResolution.y) / gameResolution);// / lightSize;
+        coord = lightPosition + coord * relativeResolution;
         coord = clamp(coord, .0, 1.0);
         vec4 data = texture2D(uLightMap, coord);
 //      color = data;
@@ -48,7 +53,10 @@ void main(void) {
     color = vec4(vec3(0.0), dst / lightSize);
 //    color = vec4(vec3(0.0), 1.0);
 //    color.g = vTextureCoord.x;
-//    color.r = yCoord;
+//    if (lightnum)
+//    color.g = yCoord;
+//    color.g = yCoord;
+//    color.g = vTextureCoord.y;
 //    color.r = float(lightnum) / float(LIGHTS_COUNT);
 //    color.r = lightSize;
 

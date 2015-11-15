@@ -47,7 +47,7 @@ class Test1 extends State {
             , shaderResolution: {type: '2fv', value: [0,0]}
             , rtSize: {type: '2fv', value: [1024, 16]}
         }, {
-            LIGHTS_COUNT: 16
+            LIGHTS_COUNT: 8
         });
 
         let spheres = [];
@@ -119,16 +119,16 @@ class Test1 extends State {
         window.state = this;
         this.timer = new Date();
 
-        this.l4 = new Circle(this.game, 0, 0, 10, 0xFFFF00);
+        this.l4 = new Circle(this.game, 200, 200, 10, 0xFFFF00);
         //this.l4.D();
         Selectable.mix(this.l4, {
             type: 'light'
         });
         this.l4.update = () => {
-            let now = new Date();
-            let time = (now - this.timer);
-            this.l4.x = 200 + 80 * Math.cos(-time * 0.05 * Math.PI / 180);
-            this.l4.y = 200 + 80 * Math.sin(-time * 0.05 * Math.PI / 180);
+        //    let now = new Date();
+        //    let time = (now - this.timer);
+        //    this.l4.x = 200 + 80 * Math.cos(-time * 0.05 * Math.PI / 180);
+        //    this.l4.y = 200 + 80 * Math.sin(-time * 0.05 * Math.PI / 180);
         };
         this.lights.push(this.l4);
         this.l4.uLightPosition = this.SMapFilter.uniforms[`uLightPosition[0]`];

@@ -11,6 +11,7 @@ class SMapFilter extends PIXI.AbstractFilter {
         this.lightMapRT = new PIXI.RenderTexture(this.game.renderer, this.game.width, this.game.height);
 
         this.definitions = definitions;
+        //this.definitions.LIGHTS_COUNT = this.uniforms.rtSize.value[1] * 0.5;
 
         this.renderTarget = new PIXI.RenderTarget(
             this.game.renderer.gl
@@ -22,7 +23,7 @@ class SMapFilter extends PIXI.AbstractFilter {
         this.renderTarget.transform = new PIXI.Matrix()
             .scale(
             this.uniforms.rtSize.value[0] / this.game.width
-            , 1.0);
+            , this.uniforms.rtSize.value[1] / this.game.height);
 
         this.defaultFilter = new PIXI.AbstractFilter(null, require('shaders/smap-test.frag'));
 

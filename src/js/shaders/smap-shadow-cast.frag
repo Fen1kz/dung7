@@ -51,6 +51,7 @@ float noise(in vec2 source) {
 }
 
 void main() {
+    vec2 relativeResolution = (max(gameResolution.x, gameResolution.y) / gameResolution);
     vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
 //    color.a = 0.0;;
     vec3 allLuminosity = vec3(0.0);
@@ -72,7 +73,8 @@ void main() {
 
         vec2 toLight = vTextureCoord - lightPosition;// + realCoord * 2.0 - vec2(1.0, 1.0);
 
-        toLight = toLight * vec2(1.0, 0.5) / lightSize;
+//        toLight = toLight * (gameResolution / max(gameResolution.x, gameResolution.y)) / lightSize;
+        toLight = toLight / relativeResolution / lightSize;
 
         float light = length(toLight);
         float angleToPoint = atan(toLight.y, toLight.x);
@@ -113,6 +115,7 @@ void main() {
     //color = blurH(uSampler, vTextureCoord, 1.0);
 
     gl_FragColor = vec4(base.rgb * sqrt(color.rgb), 1.0);
+//    gl_FragColor = vec4(base.rgb * color.rgb, 1.0);
 //    color = vec4(vec3(0.0), 1.0);
 //    color.r = light;
 //    gl_FragColor = color;

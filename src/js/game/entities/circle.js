@@ -14,7 +14,7 @@ class Circle extends Graphics {
         this.falloff = 0;
         this.ambient = .5;
         this.lightSize = .5;
-        this.lightRadius = .5;
+        this.lightRadius = 512;
 
         this.change();
 
